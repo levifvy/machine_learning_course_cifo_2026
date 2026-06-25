@@ -1,0 +1,28 @@
+# Entornos virtuales
+.venv/
+.venv_py312/
+.venv_py314/
+venv/
+
+# PyCharm
+.idea/
+
+# VS Code
+.vscode/
+
+# Jupyter
+.ipynb_checkpoints/
+
+# Python
+__pycache__/
+*.pyc
+
+# Archivos del sistema
+.DS_Store
+Thumbs.db
+
+# Modelos TabPFN
+*.ckpt
+
+#sys.executable
+*.executable

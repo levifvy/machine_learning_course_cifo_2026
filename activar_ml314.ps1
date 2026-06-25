@@ -1,0 +1,1 @@
+.\.venv_py314\Scripts\Activate.ps1
