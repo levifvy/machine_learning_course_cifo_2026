@@ -1,0 +1,87 @@
+¡Esto es oro puro para tu informe académico! Con estos resultados y gráficas tienes todo lo necesario para redactar una sección de **Metodología y Análisis de Resultados** que cumpla perfectamente con los criterios de evaluación de la guía (Análisis Crítico, Justificación, Baseline y Análisis de Errores).
+
+A continuación, te presento el análisis estructurado listo para que lo adaptes o copies directamente en tu reporte escrito.
+
+---
+
+## 📈 1. Comparación con el Baseline (Justificación del Modelo)
+
+
+
+* **Modelo Baseline (Regresión Logística):** **`77.98%`** de precisión (Accuracy).
+
+
+* **Red Neuronal (MLP):** **`79.99%`** de precisión en validación (alcanzada en las mejores épocas, con una precisión final en torno al **`80%`**).
+
+
+
+> **📝 Justificación para el Reporte:**
+> *"La implementación de la Red Neuronal Multicapa (MLP) nos permitió capturar relaciones no lineales complejas entre el historial de gastos de los pasajeros, sus cabinas y su estado de criosueño. Esto se tradujo en una mejora significativa de **+2.01%** en la precisión general de validación en comparación con el modelo baseline lineal de Regresión Logística. Esto demuestra que la hipótesis de partida (que las interacciones no lineales aportan valor predictivo) es totalmente válida para este dataset."*
+> 
+
+---
+
+## 📊 2. Análisis del Comportamiento del Entrenamiento (Curvas de Aprendizaje)
+
+
+
+Si observamos las curvas de aprendizaje que has generado (`learning_curves.png`):
+
+* **Estabilidad y Regularización:** Las curvas de pérdida (*Loss Decay*) muestran un comportamiento ejemplar. No hay una divergencia abrupta (lo que indicaría un sobreajuste severo). Esto demuestra que la combinación de **Regularización L2**, **Dropout (0.2 - 0.3)** y **Batch Normalization** que implementamos ha controlado de manera efectiva la varianza de la red neuronal.
+
+
+* **El Impacto del Scheduler (`ReduceLROnPlateau`):** Alrededor de la época 28, el planificador redujo la tasa de aprendizaje a `0.0015`. Es fascinante ver cómo a partir de ese punto, la pérdida de validación rompió el estancamiento y continuó descendiendo suavemente hasta estabilizarse en un mínimo de `0.422`. Esto justifica técnicamente el uso de optimizadores dinámicos frente a tasas de aprendizaje fijas.
+
+
+
+---
+
+## 🎛️ 3. Evaluación de la Matriz de Confusión
+
+
+
+De acuerdo con tu matriz de confusión (`confusion_matrix.png`):
+
+* **Verdaderos Negativos (No Transportados predichos correctamente):** $670$
+* **Falsos Positivos (No Transportados predichos como Transportados):** $191$
+* **Falsos Negativos (Transportados predichos como No Transportados):** $157$
+* **Verdaderos Positivos (Transportados predichos correctamente):** $721$
+
+### Análisis Métrico:
+
+El modelo muestra un rendimiento sumamente equilibrado. La precisión (*precision*) para predecir si un pasajero fue transportado es del **`79%`** y el recobrado (*recall*) es del **`82%`**. Esto significa que el modelo es ligeramente más propenso a predecir que un pasajero *sí* fue transportado antes que dejar escapar un caso real (minimiza los falsos negativos a $157$), lo cual es una dinámica positiva en la mayoría de problemas de clasificación binaria.
+
+---
+
+## 🔍 4. Análisis Crítico de Errores (¡El núcleo del 10!)
+
+
+
+La guía insiste explícitamente en realizar un *análisis de los casos de fallo del modelo*. Al analizar tus **348 errores de validación**, podemos extraer conclusiones muy potentes:
+
+### A. El "Sesgo de la Tierra" (HomePlanet)
+
+* **Dato:** El **`76.68%`** de todos los fallos del modelo ocurren con pasajeros procedentes de la **Tierra** (Earth).
+
+
+* **Explicación Crítica:** Los pasajeros de la Tierra suelen ser la mayoría en el dataset y tienen comportamientos financieros muy dispares (muchos registran gastos mínimos o nulos pero no están en criosueño). La red neuronal tiene dificultades para encontrar un patrón claro en este subgrupo, confundiéndolos más a menudo que a los pasajeros de *Europa* o *Marte*, cuyos perfiles socioeconómicos de gasto y asignación de cabinas son mucho más limpios y segregados.
+
+### B. La Confusión con el Criosueño (CryoSleep)
+
+* **Dato:** El **`65.99%`** de los errores ocurren con personas que **NO estaban en Criosueño** (`CryoSleep = False`).
+
+
+* **Explicación Crítica:** Esto tiene un sentido lógico impecable. Los pasajeros en criosueño (`CryoSleep = True`) tienen una regla implícita: su gasto en servicios a bordo (Spa, VRDeck, etc.) es estrictamente **0**. Para la red neuronal, clasificar a un pasajero en criosueño es una tarea sumamente sencilla. En cambio, cuando un pasajero está despierto (`CryoSleep = False`), entra en juego el factor humano: algunos gastan miles de créditos y otros deciden no gastar nada. Al no tener el "ancla predictiva" del gasto cero, el modelo comete casi el doble de fallos con pasajeros despiertos.
+
+---
+
+## 🔮 5. Próximos Pasos Propuestos para el Reporte
+
+
+
+Para cerrar tu documento con broche de oro (exigencia de la rúbrica), puedes proponer las siguientes líneas de mejora futuras:
+
+1. **Ingeniería de Características Específica para Pasajeros de la Tierra:** Crear variables que ayuden a subclasificar a los terrícolas para reducir el alto índice de error en este grupo (p. ej., ratios de gasto por edad).
+
+
+2. **Modelos de Ensamble Híbridos:** En lugar de depender únicamente de la red neuronal, proponer un ensamble (Voting Classifier) que combine las predicciones de esta Red Neuronal MLP con un modelo de árboles como *LightGBM* para capturar tanto patrones continuos como reglas de decisión tabulares difíciles de modelar con redes densas.
