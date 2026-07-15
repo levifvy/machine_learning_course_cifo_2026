@@ -1,0 +1,14 @@
+que tenga:
+- las librerías
+- carga de datos
+- EDA -> estudio de nulos, etc
+- Data Preparing, eliminar columnas duplicadas, columnas nulas , etc
+- Feature Engenieering -> añadir columnas estratégicas con machine learning
+- modelos (con cross validation)
+	- dummy (cv), Linear regression (cv)
+	- Elastic Name (cv) , o Logistic Regression (cv)
+	- random Forest tueneado,
+	- histgradientBoosting tuneado con cross validation
+	- tabpfn regression o clasificación
+- test
+
